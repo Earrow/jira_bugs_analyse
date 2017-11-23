@@ -1,2 +1,5 @@
 # jira_bugs_analyse
-JIRA缺陷分析，统计当月新增缺陷数、缺陷率等数据
+使用方法：
+```
+python3 main.py <jira_username> <jira_passwork> <jira_url>
+```
