@@ -41,7 +41,7 @@ class ParsePage:
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
             'Accept-Encoding': 'gzip, deflate',
             'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6',
-            'Host': 'jira.iflytek.com:2016',
+            'Host': '***',
             'User-Agent': 'Mozilla / 5.0(WindowsNT10.0;Win64;x64) AppleWebKit / 537.36(KHTML, likeGecko) '
                           'Chrome / 61.0.3163.100Safari / 537.36'
         }
@@ -49,7 +49,7 @@ class ParsePage:
         # 登录JIRA
         self._session = requests.Session()
         self._session.headers.update(headers)
-        self._session.post('http://jira.iflytek.com:2016/login.jsp', data={
+        self._session.post('http://***', data={
             'os_username': self._username,
             'os_password': self._password
         })
@@ -141,18 +141,9 @@ class ParsePage:
                       for td in tree.xpath('//td[@class="customfield_10121"]')]
         created_times = [time_tag.text for time_tag in tree.xpath('//td[@class="created"]//time')]
         updated_times = [time_tag.text for time_tag in tree.xpath('//td[@class="updated"]//time')]
-        # is_verified_nopass = [self.is_verified_nopass('http://jira.iflytek.com:2016' + link) for link in
-        #                       tree.xpath('//a[@class="issue-link"][count(./text())=1]/@href')]
-
-        # is_verified_nopass = []
-        # with ThreadPoolExecutor(max_workers=10) as executor:
-        #     future_to_url = {executor.submit(self.is_verified_nopass, 'http://jira.iflytek.com:2016' + url): url
-        #                      for url in tree.xpath('//a[@class="issue-link"][count(./text())=1]/@href')}
-        #     for future in concurrent.futures.as_completed(future_to_url):
-        #         is_verified_nopass.append(future.result())
 
         with ThreadPoolExecutor(max_workers=10) as executor:
-            is_verified_nopass = list(executor.map(self.is_verified_nopass, ('http://jira.iflytek.com:2016' + url for url in tree.xpath('//a[@class="issue-link"][count(./text())=1]/@href'))))
+            is_verified_nopass = list(executor.map(self.is_verified_nopass, ('http://***' + url for url in tree.xpath('//a[@class="issue-link"][count(./text())=1]/@href'))))
 
         issues = {ISSUE(type, title, status, severity, created_time, updated_time, is_nopass)
                   for type, title, status, severity, created_time, updated_time, is_nopass
